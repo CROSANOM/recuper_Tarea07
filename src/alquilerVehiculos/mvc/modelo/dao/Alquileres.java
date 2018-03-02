@@ -1,5 +1,12 @@
 package alquilerVehiculos.mvc.modelo.dao;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Arrays;
 
 import alquilerVehiculos.mvc.modelo.dominio.Alquiler;
@@ -13,6 +20,8 @@ public class Alquileres {
 
 	private final int MAX_ALQUILERES = 5;
 	private Alquiler[] alquileres;
+	// declarar constante guarda la ruta relativa del fichero
+	private final String FICHERO_ALQUILERES = "datos/alquileres.dat";
 
 	// constructor
 	public Alquileres() {
@@ -35,8 +44,47 @@ public class Alquileres {
 		return MAX_ALQUILERES;
 	}
 
+	// metodos de lectura y escritura de ficheros
+
+	// metodo de lectura
+
+	public void leerAlquileres() {
+		// 1 objeto fichero ( Ruta )
+
+		File fichero = new File(FICHERO_ALQUILERES);
+
+		ObjectInputStream entrada;
+		try {
+			entrada = new ObjectInputStream(new FileInputStream(fichero));
+			try {
+				alquileres = (Alquiler[]) entrada.readObject();
+				entrada.close();
+				System.out.println("Fichero alquileres lei­do satisfactoriamente.");
+			} catch (ClassNotFoundException e) {
+				System.out.println("No puedo encontrar la clase que tengo que leer.");
+			} catch (IOException e) {
+				System.out.println("Error inesperado de Entrada/Salida.");
+			}
+		} catch (IOException e) {
+			System.out.println("No puedo abrir el fichero de alquileres.");
+		}
+	}
+
+	public void escribirAlquileres() {
+		File fichero = new File(FICHERO_ALQUILERES);
+		try {
+			ObjectOutputStream salida = new ObjectOutputStream(new FileOutputStream(fichero));
+			salida.writeObject((Alquiler[]) alquileres);
+			salida.close();
+			System.out.println("Fichero alquileres escrito satisfactoriamente");
+		} catch (FileNotFoundException e) {
+			System.out.println("No puedo crear el fichero de alquileres");
+		} catch (IOException e) {
+			System.out.println("Error inesperado de Entrada/Salida");
+		}
+	}
+
 	// abrir alquiler (buscarIndiceLibre, indiceNoSupera)
-	
 	/**
 	 * @param cliente
 	 * @param vehiculo
@@ -51,8 +99,8 @@ public class Alquileres {
 		}
 	}
 
-	// Metodo buscarPrimerIndiceLibreComprobandoExistencia (noSuperaTamano) 
-	
+	// Metodo buscarPrimerIndiceLibreComprobandoExistencia (noSuperaTamano)
+
 	/**
 	 * @param vehiculo
 	 * @return indice
@@ -76,13 +124,14 @@ public class Alquileres {
 	// metodo indiceNoSuperaTamaño(int indice)
 	/**
 	 * @param indice
-	 * @return boolean 
+	 * @return boolean
 	 */
 	private boolean indiceNoSuperaTamano(int indice) {
 		return indice < alquileres.length;
 	}
 
-	// cerrar alquiler pasandole solo un vehiculo (buscarIndiceAlquilerAbierto , indiceNoSuperaTamano)
+	// cerrar alquiler pasandole solo un vehiculo (buscarIndiceAlquilerAbierto ,
+	// indiceNoSuperaTamano)
 
 	/**
 	 * @param vehiculo
@@ -96,7 +145,7 @@ public class Alquileres {
 	}
 
 	// private int buscarAlquilerAbierto(indiceNoSuperaTamaño)
-	
+
 	/**
 	 * @param vehiculo
 	 * @return
