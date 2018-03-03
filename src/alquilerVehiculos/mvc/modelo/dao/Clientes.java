@@ -1,5 +1,13 @@
 package alquilerVehiculos.mvc.modelo.dao;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOError;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Arrays;
 
 import alquilerVehiculos.mvc.modelo.dominio.Cliente;
@@ -9,6 +17,10 @@ public class Clientes {
 
 	private Cliente[] clientes;
 	private final int MAX_CLIENTES = 5;
+
+	// atributo ruta del fichero
+
+	private final String FICHERO_CLIENTES = "/datos/clientes.dat";
 
 	// constructor
 
@@ -24,8 +36,76 @@ public class Clientes {
 	public Cliente[] getClientes() {
 		return clientes.clone();
 	}
-	/*anadir Clientes (BuscarIndiceLibreComprobandoExistencia,
-	 indiceNoSuperaTamano)*/
+
+	// Metodos de lectura - escritura de fichero
+
+	public void leerClientes() {
+
+		// 1º crear fichero usando la constante ruta
+
+		File fichero = new File(FICHERO_CLIENTES);
+
+		// 2º crear Objeto de la clase ObjectInputStrean
+
+		ObjectInputStream entrada;
+
+		try {
+
+			entrada = new ObjectInputStream(new FileInputStream(fichero));
+
+			try {
+				clientes = (Cliente[]) entrada.readObject();
+				entrada.close();
+				System.out.println("fichero leido correctamente");
+				Cliente.aumentarUltimoIdentificador(calcularUltimoIdentificador());
+
+			} catch (ClassNotFoundException e) {
+
+				System.out.println("No puedo encontrar la clase ");
+
+			} catch (IOException e) {
+
+				System.out.println("Error inesperado de Entrada/Salida");
+			}
+
+		} catch (IOException e) {
+
+			System.out.println("No puede abrir el fichero de clientes");
+
+		}
+
+	}
+
+	private Object calcularUltimoIdentificador() {
+		int ultimoIdentificador = 0;
+		int i = 0;
+		while (clientes[i] != null) {
+			if (clientes[i].getIdentificador() > ultimoIdentificador)
+				ultimoIdentificador = clientes[i].getIdentificador();
+		}
+		return ultimoIdentificador;
+	}
+
+	// escribirClientes
+
+	public void escribirClientes() {
+		File fichero = new File(FICHERO_CLIENTES);
+		try {
+			ObjectOutputStream salida = new ObjectOutputStream(new FileOutputStream(fichero));
+			salida.writeObject((Cliente[]) clientes);
+			salida.close();
+			System.out.println("Fichero clientes escrito satisfactoriamente.");
+		} catch (FileNotFoundException e) {
+			System.out.println("No puedo crear el fichero de clientes");
+		} catch (IOException e) {
+			System.out.println("Error inesperado de Entrada/Salida");
+		}
+	}
+
+	/*
+	 * anadir Clientes (BuscarIndiceLibreComprobandoExistencia,
+	 * indiceNoSuperaTamano)
+	 */
 
 	/**
 	 * @param cliente
@@ -68,9 +148,11 @@ public class Clientes {
 		return indice < clientes.length;
 	}
 
-	/*metodo Borrar Cliente (buscarIndice,
-	
-	 indiceNoSuperaTamano,desplazarUnaPosiciónHaciaIzquierda)*/
+	/*
+	 * metodo Borrar Cliente (buscarIndice,
+	 * 
+	 * indiceNoSuperaTamano,desplazarUnaPosiciónHaciaIzquierda)
+	 */
 
 	/**
 	 * @param dni
@@ -89,7 +171,7 @@ public class Clientes {
 	 * @param dni
 	 * @return indice
 	 */
-	
+
 	private int buscarIndiceCliente(String dni) {
 		int indice = 0;
 		boolean clienteEncontrado = false;
@@ -114,8 +196,8 @@ public class Clientes {
 			clientes[clientes.length - 1] = null;
 	}
 
-	/*buscarCliente (indiceNoSuperaTamano*/
-	
+	/* buscarCliente (indiceNoSuperaTamano */
+
 	/**
 	 * @param dni
 	 * @return cliente

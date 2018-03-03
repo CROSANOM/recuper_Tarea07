@@ -1,6 +1,14 @@
 package alquilerVehiculos.mvc.modelo.dao;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Arrays;
+
 
 import alquilerVehiculos.mvc.modelo.dominio.ExcepcionAlquilerVehiculos;
 import alquilerVehiculos.mvc.modelo.dominio.vehiculo.TipoVehiculo;
@@ -11,6 +19,11 @@ public class Vehiculos {
 	private Vehiculo[] vehiculos;
 	private final int MAX_VEHICULOS = 10;
 
+	
+	
+	// atributo ruta del fichero
+
+	private final String FICHERO_VEHICULOS = "/NUEVODIR/fichero1.txt";
 	// constructor
 	public Vehiculos() {
 		vehiculos = new Vehiculo[MAX_VEHICULOS];
@@ -22,6 +35,52 @@ public class Vehiculos {
 	public Vehiculo[] getVehiculo() {
 		return vehiculos.clone();
 	}
+
+	// metodos de lectura - escritura del fichero 
+	
+
+
+	// Metodos de lectura - escritura de fichero
+
+	public void leerVehiculos() {
+
+		// 1º crear fichero usando la constante ruta
+
+		File fichero = new File(FICHERO_VEHICULOS);
+
+		// 2º crear Objeto de la clase ObjectInputStrean
+
+		ObjectInputStream entrada;
+		try {
+			entrada = new ObjectInputStream(new FileInputStream(fichero));
+			try {
+				vehiculos = (Vehiculo[]) entrada.readObject();
+				entrada.close();
+				System.out.println("Fichero alquileres lei­do satisfactoriamente.");
+			} catch (ClassNotFoundException e) {
+				System.out.println("No puedo encontrar la clase que tengo que leer.");
+			} catch (IOException e) {
+				System.out.println("Error inesperado de Entrada/Salida.");
+			}
+		} catch (IOException e) {
+			System.out.println("No puedo abrir el fichero de vehiculos.");
+		}
+	}
+
+	public void escribirVehiculos() {
+		File fichero = new File(FICHERO_VEHICULOS);
+		try {
+			ObjectOutputStream salida = new ObjectOutputStream(new FileOutputStream(fichero));
+			salida.writeObject((Vehiculo[]) vehiculos);
+			salida.close();
+			System.out.println("Fichero alquileres escrito satisfactoriamente");
+		} catch (FileNotFoundException e) {
+			System.out.println("No puedo crear el fichero de vehiculos");
+		} catch (IOException e) {
+			System.out.println("Error inesperado de Entrada/Salida");
+		}
+	}
+	
 
 	/*
 	 * metodo anadir Vehiculo (buscarPrimerIndiceLibre,indiceNosuperaTamaño)

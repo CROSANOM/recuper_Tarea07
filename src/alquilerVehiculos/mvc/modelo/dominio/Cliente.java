@@ -135,4 +135,9 @@ public class Cliente implements Serializable {
 				+ direccionPostal + "]";
 	}
 
+	public static void aumentarUltimoIdentificador(Object calcularUltimoIdentificador) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

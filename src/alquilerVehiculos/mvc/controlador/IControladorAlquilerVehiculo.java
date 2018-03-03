@@ -12,6 +12,8 @@ public interface IControladorAlquilerVehiculo {
 	 */
 	void comenzar();
 
+	void salir();
+
 	// metodos de cliente Cliente
 	/**
 	 * @param cliente
@@ -47,7 +49,7 @@ public interface IControladorAlquilerVehiculo {
 
 	/**
 	 * @param matricula
-	 * @return  
+	 * @return
 	 */
 
 	Vehiculo buscarVehiculo(String matricula);
@@ -74,6 +76,6 @@ public interface IControladorAlquilerVehiculo {
 	 */
 	Alquiler[] obtenerAlquiler();
 
-	void anadirDatosPrueba();
+	// void anadirDatosPrueba();
 
 }

@@ -86,6 +86,21 @@ public interface IModeloAlquilerVehiculos {
 	 */
 	void cerrarAlquiler(Vehiculo vehiculo);
 
+
+	// metodos de lectura - escritura 
+	
+	void leerClientes();
+	
+	void escribirClientes();
+	
+	void leerVehiculos();
+	
+	void escribirVehiculos();
+	
+	void leerAlquileres();
+	
+	void escribirAlquileres();
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -93,7 +108,7 @@ public interface IModeloAlquilerVehiculos {
 	 */
 	String toString();
 
-	// Metodo con datos de pruebas
-	void anadirDatosPrueba();
+//	// Metodo con datos de pruebas
+//	void anadirDatosPrueba();
 
 }
